@@ -1,14 +1,36 @@
 #include "rpc_connection.h"
 #include "serialization.h"
+#include <windows.h>
 
 #include <atomic>
 
 static const int RpcVersion = 1;
 static RpcConnection Instance;
 
+int isWine = 0;
+
 /*static*/ RpcConnection* RpcConnection::Create(const char* applicationId)
 {
-    Instance.connection = BaseConnection::Create();
+    BaseConnection* connection;
+
+    if (!isWine) {
+        HMODULE ntdll = GetModuleHandle("ntdll.dll");
+
+        if (ntdll) {
+            if (GetProcAddress(ntdll, "wine_get_version"))
+                isWine = 1;
+        }
+    }
+
+    if (isWine) {
+        BaseConnectionUnix* unix_connec = new BaseConnectionUnix;
+        connection = unix_connec;
+    }
+    else {
+        BaseConnectionWin* win_connec = new BaseConnectionWin;
+        connection = win_connec;
+    }
+    Instance.connection = connection;
     StringCopy(Instance.appId, applicationId);
     return &Instance;
 }
@@ -16,7 +38,7 @@ static RpcConnection Instance;
 /*static*/ void RpcConnection::Destroy(RpcConnection*& c)
 {
     c->Close();
-    BaseConnection::Destroy(c->connection);
+    // BaseConnectionWin::Destroy(c->connection);
     c = nullptr;
 }
 

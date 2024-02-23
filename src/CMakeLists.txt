@@ -27,7 +27,7 @@ endif(${BUILD_SHARED_LIBS})
 
 if(WIN32)
     add_definitions(-DDISCORD_WINDOWS)
-    set(BASE_RPC_SRC ${BASE_RPC_SRC} connection_win.cpp discord_register_win.cpp)
+    set(BASE_RPC_SRC ${BASE_RPC_SRC} connection_unix.cpp connection_win.cpp discord_register_win.cpp)
     add_library(discord-rpc ${BASE_RPC_SRC})
     if (MSVC)
         if(USE_STATIC_CRT)
@@ -58,56 +58,6 @@ if(WIN32)
     endif(MSVC)
     target_link_libraries(discord-rpc PRIVATE psapi advapi32)
 endif(WIN32)
-
-if(UNIX)
-    set(BASE_RPC_SRC ${BASE_RPC_SRC} connection_unix.cpp)
-
-    if (APPLE)
-        add_definitions(-DDISCORD_OSX)
-        set(BASE_RPC_SRC ${BASE_RPC_SRC} discord_register_osx.m)
-    else (APPLE)
-        add_definitions(-DDISCORD_LINUX)
-        set(BASE_RPC_SRC ${BASE_RPC_SRC} discord_register_linux.cpp)
-    endif(APPLE)
-
-    add_library(discord-rpc ${BASE_RPC_SRC})
-    target_link_libraries(discord-rpc PUBLIC pthread)
-
-    if (APPLE)
-        target_link_libraries(discord-rpc PRIVATE "-framework AppKit, -mmacosx-version-min=10.10")
-    endif (APPLE)
-
-    target_compile_options(discord-rpc PRIVATE
-        -g
-        -Wall
-        -Wextra
-        -Wpedantic
-    )
-
-    if (${WARNINGS_AS_ERRORS})
-      target_compile_options(discord-rpc PRIVATE -Werror)
-    endif (${WARNINGS_AS_ERRORS})
-
-    target_compile_options(discord-rpc PRIVATE
-        -Wno-unknown-pragmas # pragma push thing doesn't work on clang
-        -Wno-old-style-cast # it's fine
-        -Wno-c++98-compat # that was almost 2 decades ago
-        -Wno-c++98-compat-pedantic
-        -Wno-missing-noreturn
-        -Wno-padded # structure padding
-        -Wno-covered-switch-default
-        -Wno-exit-time-destructors # not sure about these
-        -Wno-global-constructors
-    )
-
-    if (${BUILD_SHARED_LIBS})
-        target_compile_options(discord-rpc PRIVATE -fPIC)
-    endif (${BUILD_SHARED_LIBS})
-
-    if (APPLE)
-        target_link_libraries(discord-rpc PRIVATE "-framework AppKit")
-    endif (APPLE)
-endif(UNIX)
 
 target_include_directories(discord-rpc PRIVATE ${RAPIDJSON}/include)
 

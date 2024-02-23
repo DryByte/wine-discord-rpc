@@ -12,25 +12,14 @@ int GetProcessId()
     return (int)::GetCurrentProcessId();
 }
 
-struct BaseConnectionWin : public BaseConnection {
-    HANDLE pipe{INVALID_HANDLE_VALUE};
-};
-
-static BaseConnectionWin Connection;
-
-/*static*/ BaseConnection* BaseConnection::Create()
-{
-    return &Connection;
-}
-
-/*static*/ void BaseConnection::Destroy(BaseConnection*& c)
+/*static*/ void BaseConnectionWin::Destroy(BaseConnection*& c)
 {
     auto self = reinterpret_cast<BaseConnectionWin*>(c);
     self->Close();
     c = nullptr;
 }
 
-bool BaseConnection::Open()
+bool BaseConnectionWin::Open()
 {
     wchar_t pipeName[]{L"\\\\?\\pipe\\discord-ipc-0"};
     const size_t pipeDigit = sizeof(pipeName) / sizeof(wchar_t) - 2;
@@ -61,7 +50,7 @@ bool BaseConnection::Open()
     }
 }
 
-bool BaseConnection::Close()
+bool BaseConnectionWin::Close()
 {
     auto self = reinterpret_cast<BaseConnectionWin*>(this);
     ::CloseHandle(self->pipe);
@@ -70,7 +59,7 @@ bool BaseConnection::Close()
     return true;
 }
 
-bool BaseConnection::Write(const void* data, size_t length)
+bool BaseConnectionWin::Write(const void* data, size_t length)
 {
     if (length == 0) {
         return true;
@@ -93,7 +82,7 @@ bool BaseConnection::Write(const void* data, size_t length)
       bytesWritten == bytesLength;
 }
 
-bool BaseConnection::Read(void* data, size_t length)
+bool BaseConnectionWin::Read(void* data, size_t length)
 {
     assert(data);
     if (!data) {
