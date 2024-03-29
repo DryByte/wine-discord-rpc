@@ -91,7 +91,6 @@ size_t JsonWriteRichPresenceObj(char* dest,
     {
         WriteObject top(writer);
 
-        JsonWriteNonce(writer, nonce);
 
         WriteKey(writer, "cmd");
         writer.String("SET_ACTIVITY");
@@ -157,11 +156,28 @@ size_t JsonWriteRichPresenceObj(char* dest,
                     WriteOptionalString(writer, "join", presence->joinSecret);
                     WriteOptionalString(writer, "spectate", presence->spectateSecret);
                 }
+                else {
+                    if ((presence->buttonLabels[0] && presence->buttonUrls[0]) || 
+                        (presence->buttonLabels[1] && presence->buttonUrls[1])) {
+                        WriteArray buttons(writer, "buttons");
+
+                        for (int i = 0; i < 2; i++) {
+                            if (presence->buttonLabels[i] && presence->buttonUrls[i]) {
+                                writer.StartObject();
+                                WriteOptionalString(writer, "label", presence->buttonLabels[i]);
+                                WriteOptionalString(writer, "url", presence->buttonUrls[i]);
+                                writer.EndObject();
+                            }
+                        }
+                    }
+                }
 
                 writer.Key("instance");
                 writer.Bool(presence->instance != 0);
             }
         }
+
+        JsonWriteNonce(writer, nonce);
     }
 
     return writer.Size();
