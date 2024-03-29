@@ -10,6 +10,9 @@ Now you need to compile this using gcc/g++ as well, because the assembly calls i
 cmake  -DCMAKE_SYSTEM_NAME="Windows" -DCMAKE_C_COMPILER="<PATH TO WINDOWS GCC>" -DCMAKE_CXX_COMPILE="<PATH TO WINDOWS G++>"
 ```
 
+### Features
+- [Presence Buttons](https://github.com/DryByte/wine-discord-rpc/blob/master/include/discord_rpc.h#L35)
+
 ## Deprecation Notice
 
 This library has been deprecated in favor of Discord's GameSDK. [Learn more here](https://discordapp.com/developers/docs/game-sdk/sdk-starter-guide)
