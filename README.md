@@ -7,7 +7,7 @@ When someone would use this? To be honest, i don't really know... The use of thi
 
 Now you need to compile this using gcc/g++ as well, because the assembly calls in `connection_unix.cpp`. So, when executing cmake use this flags:
 ```sh
-cmake  -DCMAKE_SYSTEM_NAME="Windows" -DCMAKE_C_COMPILER="<PATH TO WINDOWS GCC>" -DCMAKE_CXX_COMPILE="<PATH TO WINDOWS G++>"
+cmake -DCMAKE_SYSTEM_NAME="Windows" -DCMAKE_C_COMPILER="<PATH TO WINDOWS GCC>" -DCMAKE_CXX_COMPILER="<PATH TO WINDOWS G++>"
 ```
 
 ### Features
