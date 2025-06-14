@@ -5,6 +5,8 @@
 This fork allows you to use discord-rpc library in linux (wine) and windows with the same code, not requiring to do a bridge.
 When someone would use this? To be honest, i don't really know... The use of this fork is for really specific cases where you want to support linux and windows but you only can build something to windows machines.
 
+Before you compile, remind to use ``git submodule update --recursive --init`` to get rapidjson working.
+
 Now you need to compile this using gcc/g++ as well, because the assembly calls in `connection_unix.cpp`. So, when executing cmake use this flags:
 ```sh
 cmake -DCMAKE_SYSTEM_NAME="Windows" -DCMAKE_C_COMPILER="<PATH TO WINDOWS GCC>" -DCMAKE_CXX_COMPILER="<PATH TO WINDOWS G++>"
