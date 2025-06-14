@@ -33,6 +33,11 @@ execute_process(
 )
 
 find_file(RAPIDJSON NAMES rapidjson rapidjson-1.1.0 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty REQUIRED NO_DEFAULT_PATH)
+
+option(RAPIDJSON_BUILD_EXAMPLES OFF)
+option(RAPIDJSON_BUILD_DOC OFF)
+option(RAPIDJSON_BUILD_TESTS OFF)
+
 add_subdirectory(${RAPIDJSON})
 add_library(rapidjson STATIC IMPORTED ${RAPIDJSON})
 
