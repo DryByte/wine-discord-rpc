@@ -91,7 +91,6 @@ size_t JsonWriteRichPresenceObj(char* dest,
     {
         WriteObject top(writer);
 
-
         WriteKey(writer, "cmd");
         writer.String("SET_ACTIVITY");
 
@@ -157,7 +156,7 @@ size_t JsonWriteRichPresenceObj(char* dest,
                     WriteOptionalString(writer, "spectate", presence->spectateSecret);
                 }
                 else {
-                    if ((presence->buttonLabels[0] && presence->buttonUrls[0]) || 
+                    if ((presence->buttonLabels[0] && presence->buttonUrls[0]) ||
                         (presence->buttonLabels[1] && presence->buttonUrls[1])) {
                         WriteArray buttons(writer, "buttons");
 
